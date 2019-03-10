@@ -1,0 +1,21 @@
+{
+    "name": "php-libraries/constraints",
+    "type": "library",
+    "description": "Type constraint checking library",
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DealNews\\Constraints\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DealNews\\Constraints\\Tests\\": "tests/"
+        }
+    }
+}
