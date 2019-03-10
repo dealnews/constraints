@@ -1,7 +1,6 @@
 # Constraints
 
-A library for testing primitive and abstract data types in PHP with type
-juggling.
+A library for testing primitive and abstract data types in PHP with type juggling.
 
 ## Supported Primitive Types
 

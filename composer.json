@@ -1,7 +1,16 @@
 {
-    "name": "php-libraries/constraints",
+    "name": "dealnews/constraints",
     "type": "library",
     "description": "Type constraint checking library",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Brian Moon",
+            "email": "brianm@dealnews.com",
+            "homepage": "https://www.dealnews.com/",
+            "role": "Developer"
+        }
+    ],
     "require-dev": {
         "phpunit/phpunit": "^7.5"
     },
