@@ -102,27 +102,27 @@ class Constraint {
     public function check($value, array $constraint) {
 
         if ($this->debug) {
-            $this->validate_constraint($constraint);
+            $this->validateConstraint($constraint);
         }
 
-        $value = $this->check_default($value, $constraint);
+        $value = $this->checkDefault($value, $constraint);
 
-        if ($this->is_null($value, $constraint)) {
+        if ($this->isNull($value, $constraint)) {
             return null;
         }
 
 
         if (in_array($constraint["type"], $this->primitive_types)) {
 
-            $new_value = $this->filter_primitive($value, $constraint["type"], $constraint);
+            $new_value = $this->filterPrimitive($value, $constraint["type"], $constraint);
 
         } elseif (isset($this->abstract_types[$constraint["type"]])) {
 
-            $new_value = $this->filter_abstract($value, $this->abstract_types[$constraint["type"]], $constraint);
+            $new_value = $this->filterAbstract($value, $this->abstract_types[$constraint["type"]], $constraint);
 
         } elseif (is_object($value) || class_exists($constraint["type"])) {
 
-            $new_value = $this->filter_class($value, $constraint["type"]);
+            $new_value = $this->filterClass($value, $constraint["type"]);
 
         } else {
 
@@ -156,7 +156,7 @@ class Constraint {
      * @param  array  $constraint A constraint array
      * @return mixed
      */
-    public function filter_primitive($value, $type, $constraint) {
+    public function filterPrimitive($value, string $type, array $constraint) {
 
         $expectation = "valid $type";
 
@@ -250,9 +250,9 @@ class Constraint {
      * @param  array  $constraint A constraint array
      * @return mixed
      */
-    public function filter_abstract($value, $class, $constraint) {
+    public function filterAbstract($value, string $class, array $constraint) {
         $new_value = $class::filter(
-            $this->filter_primitive($value, $class::PRIMITIVE, $constraint),
+            $this->filterPrimitive($value, $class::PRIMITIVE, $constraint),
             $constraint,
             $this
         );
@@ -275,7 +275,7 @@ class Constraint {
      * @param  string $class      Class name
      * @return mixed
      */
-    public function filter_class($value, $class) {
+    public function filterClass($value, string $class) {
         if (!($value instanceof $class)) {
             if (is_array($value) && is_a($class, "\ArrayObject", true)) {
                 $obj = new $class();
@@ -300,7 +300,7 @@ class Constraint {
      * @param  array  $constraint A constraint array
      * @return mixed
      */
-    protected function check_default($value, array $constraint) {
+    protected function checkDefault($value, array $constraint) {
         /**
          * If we got a null value but the column has a default, change it
          * and throw a warning on dev as that is bad form.
@@ -321,7 +321,7 @@ class Constraint {
      * @param  array  $constraint A constraint array
      * @return boolean             [description]
      */
-    protected function is_null($value, array $constraint) {
+    protected function isNull($value, array $constraint): bool {
         $is_null = false;
         /**
          * If we are still null after the default check, we need to just skip
@@ -351,7 +351,7 @@ class Constraint {
      * @return bool
      * @throws \LogicException
      */
-    public function validate_constraint(array $constraint) {
+    public function validateConstraint(array $constraint): bool {
         foreach ($constraint as $option => $value) {
             if (!array_key_exists($option, $this->valid_constraint)) {
                 throw new \LogicException("Invalid constraint option $option", 1);

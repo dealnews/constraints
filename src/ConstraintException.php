@@ -37,7 +37,7 @@ class ConstraintException extends \UnexpectedValueException {
      * @param integer         $code     A unique code for this thrown exception
      * @param \Throwable|null $previous A previously thrown exception which was caught
      */
-    public function __construct ($value, $expected, $example, $code = 0, \Throwable $previous = null) {
+    public function __construct ($value, string $expected, string $example, int $code = 0, \Throwable $previous = null) {
         if (!empty($expected)) {
             $this->expected = $expected;
         }
@@ -66,7 +66,7 @@ class ConstraintException extends \UnexpectedValueException {
      *
      * @return string
      */
-    public function getExpected () {
+    public function getExpected (): string {
         return $this->expected;
     }
 
@@ -75,7 +75,7 @@ class ConstraintException extends \UnexpectedValueException {
      *
      * @return string
      */
-    public function getExample () {
+    public function getExample (): string {
         return $this->example;
     }
 }

@@ -75,7 +75,7 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
         ];
         $dc = new Constraint();
         $this->assertTrue(
-            $dc->validate_constraint($valid_constraint)
+            $dc->validateConstraint($valid_constraint)
         );
     }
 
@@ -86,7 +86,7 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
     public function testConstraintValidationExceptionTypes() {
         $dc = new Constraint();
         $this->assertTrue(
-            $dc->validate_constraint(["type" => 1])
+            $dc->validateConstraint(["type" => 1])
         );
     }
 
@@ -97,14 +97,14 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
     public function testConstraintValidationExceptionKeys() {
         $dc = new Constraint();
         $this->assertTrue(
-            $dc->validate_constraint(["foo" => 1])
+            $dc->validateConstraint(["foo" => 1])
         );
     }
 
     public function testConstraintValidationExtraValues() {
         $dc = new Constraint(["foo" => 0]);
         $this->assertTrue(
-            $dc->validate_constraint(["foo" => 1])
+            $dc->validateConstraint(["foo" => 1])
         );
     }
 
@@ -115,7 +115,7 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
     public function testConstraintValidationExceptionExtraKeys() {
         $dc = new Constraint(["foo" => 0]);
         $this->assertTrue(
-            $dc->validate_constraint(["foo" => ""])
+            $dc->validateConstraint(["foo" => ""])
         );
     }
 
