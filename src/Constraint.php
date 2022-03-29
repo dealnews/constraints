@@ -151,16 +151,23 @@ class Constraint {
     /**
      * Validates primitive types
      *
-     * @param  mixed  $value      Value to filter
-     * @param  string $type       Type which should match
-     * @param  array  $constraint A constraint array
+     * @param  mixed  $value                Value to filter
+     * @param  string $type                 Type which should match
+     * @param  array  $constraint           A constraint array
+     * @param  array  $ignored_properties   A list of properties of a constraint to ignore
+     *                                      (with the assumption they will be checked, elsewhere)
      * @return mixed
      */
-    public function filterPrimitive($value, string $type, array $constraint) {
+    public function filterPrimitive($value, string $type, array $constraint, array $ignored_properties = []) {
 
         $expectation = "valid $type";
 
         $new_value = $value;
+
+        if (!empty($ignored_properties)) {
+            // remove array keys in $constraint that are listed in $ignored_properties
+            $constraint = array_diff_key($constraint, array_combine($ignored_properties, $ignored_properties));
+        }
 
         switch ($type) {
 
@@ -169,6 +176,16 @@ class Constraint {
                     $new_value = null;
                     if (is_object($value) && $value instanceof \ArrayObject) {
                         $new_value = $value->getArrayCopy();
+                    }
+                }
+                if (is_array($new_value) && !empty($constraint['constraint'])) {
+                    try {
+                        foreach ($new_value as $nv) {
+                            $this->check($nv, $constraint['constraint']);
+                        }
+                    } catch (ConstraintException $e) {
+                        $new_value = null;
+                        $expectation = "array contents: " . $e->getExpected();
                     }
                 }
                 break;
@@ -252,7 +269,7 @@ class Constraint {
      */
     public function filterAbstract($value, string $class, array $constraint) {
         $new_value = $class::filter(
-            $this->filterPrimitive($value, $class::PRIMITIVE, $constraint),
+            $this->filterPrimitive($value, $class::PRIMITIVE, $constraint, $class::PRIMITIVE_IGNORED_PROPERTIES),
             $constraint,
             $this
         );
