@@ -26,6 +26,8 @@ class Range extends AbstractConstraint implements ConstraintInterface {
 
     const PRIMITIVE = "array";
 
+    const PRIMITIVE_IGNORED_PROPERTIES = ['constraint'];
+
     protected static $operators = [
         "=",
         "<",

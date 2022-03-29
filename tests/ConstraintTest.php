@@ -276,7 +276,17 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
                     "type" => "\ArrayObject"
                 ],
                 new \ArrayObject
-            ]
+            ],
+            [
+                [1,2],
+                [
+                    "type" => "array",
+                    "constraint" => [
+                        "type" => "integer"
+                    ]
+                ],
+                [1,2]
+            ],
         ];
     }
 
@@ -392,6 +402,15 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
                     "is_nullable" => false,
                 ],
                 ""
+            ],
+            [ // testing that sub constraints are processed for array types
+                ['foo'],
+                [
+                    "type" => "array",
+                    "constraint" => [
+                        'type' => 'integer'
+                    ]
+                ]
             ],
         ];
     }

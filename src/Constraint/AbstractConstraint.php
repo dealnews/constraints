@@ -12,6 +12,8 @@ abstract class AbstractConstraint {
 
     const PRIMITIVE = "";
 
+    const PRIMITIVE_IGNORED_PROPERTIES = [];
+
     final public function __construct() {
         trigger_error(get_called_class()." must not be instantiated.", E_USER_ERROR);
         exit(1);
