@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\URL;
 
 class URLTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -28,22 +27,21 @@ class URLTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function constraintData() {
-
         return [
             [
-                "http://www.example.com/",
-                ["type" => "url"],
-                "http://www.example.com/"
+                'http://www.example.com/',
+                ['type' => 'url'],
+                'http://www.example.com/',
             ],
             [
-                "    ",
-                ["type" => "url"],
-                null
+                '    ',
+                ['type' => 'url'],
+                null,
             ],
             [
-                "asdf",
-                ["type" => "url"],
-                null
+                'asdf',
+                ['type' => 'url'],
+                null,
             ],
         ];
     }

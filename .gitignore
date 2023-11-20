@@ -2,6 +2,8 @@
 .DS_Store
 *~
 *.sw[aop]
+.php-cs-fixer.cache
+.phpunit.result.cache
 
 # Deployment dependencies
 vendor

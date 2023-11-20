@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\Currency;
 
 class CurrencyTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -28,27 +27,26 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function constraintData() {
-
         return [
             [
-                "$1,000.00",
-                ["type" => "currency"],
-                "1000.00"
+                '$1,000.00',
+                ['type' => 'currency'],
+                '1000.00',
             ],
             [
                 1000.00,
-                ["type" => "currency"],
-                "1000.00"
+                ['type' => 'currency'],
+                '1000.00',
             ],
             [
-                "10 cents",
-                ["type" => "currency"],
-                "0.10"
+                '10 cents',
+                ['type' => 'currency'],
+                '0.10',
             ],
             [
-                "10¢",
-                ["type" => "currency"],
-                null
+                '10¢',
+                ['type' => 'currency'],
+                null,
             ],
         ];
     }

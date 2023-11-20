@@ -20,21 +20,21 @@ use DealNews\Constraints\Interfaces\ConstraintInterface;
  */
 class Range extends AbstractConstraint implements ConstraintInterface {
 
-    const DESCRIPTION = "A range query structure";
+    const DESCRIPTION = 'A range query structure';
 
     const EXAMPLE = "`['>', 5]`, `['between', 5, 10]`";
 
-    const PRIMITIVE = "array";
+    const PRIMITIVE = 'array';
 
     const PRIMITIVE_IGNORED_PROPERTIES = ['constraint'];
 
-    protected static $operators = [
-        "=",
-        "<",
-        ">",
-        ">=",
-        "<=",
-        "between"
+    const OPERATORS = [
+        '=',
+        '<',
+        '>',
+        '>=',
+        '<=',
+        'between',
     ];
 
     public static function filter($value, array $constraint, Constraint $dc) {
@@ -46,22 +46,23 @@ class Range extends AbstractConstraint implements ConstraintInterface {
          * The third (key 2) is required for a between comparison and must not be null
          */
         if (
-            in_array($value[0], self::$operators) &&
-            isset($value[1]) &&
+            in_array($value[0], self::OPERATORS) &&
+            isset($value[1])                      &&
             (
-                $value[0] != "between" ||
+                $value[0] != 'between' ||
                 (array_key_exists(2, $value) && isset($value[2]))
             )
         ) {
-            if (isset($constraint["constraint"])) {
-                $value[1] = $dc->check($value[1], $constraint["constraint"]);
+            if (isset($constraint['constraint'])) {
+                $value[1] = $dc->check($value[1], $constraint['constraint']);
                 if (array_key_exists(2, $value)) {
-                    $value[2] = $dc->check($value[2], $constraint["constraint"]);
+                    $value[2] = $dc->check($value[2], $constraint['constraint']);
                 }
             }
 
             $return_value = $value;
         }
+
         return $return_value;
     }
 }

@@ -6,13 +6,110 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\ConstraintException;
 
 class ConstraintTest extends \PHPUnit\Framework\TestCase {
+    public function testMultiByteStrings() {
+        $input = 'foobar😀';
+        $dc    = Constraint::init();
+        $value = $dc->check(
+            $input,
+            [
+                'type' => 'string',
+                'max'  => 7,
+            ]
+        );
+        $this->assertEquals($input, $value);
+    }
+
+    public function testExceptionMethods() {
+        $dc = new ConstraintException(
+            'some value',
+            'expected',
+            'example'
+        );
+        $this->assertEquals(
+            'expected',
+            $dc->getExpected()
+        );
+        $this->assertEquals(
+            'example',
+            $dc->getExample()
+        );
+    }
+
+    /**
+     * @dataProvider exceptionData
+     */
+    public function testExceptions($value, $constraint) {
+        $this->expectException(ConstraintException::class);
+        $dc = new Constraint();
+        $dc->check($value, $constraint);
+    }
+
+    public function testInvalidType() {
+        $this->expectException(\LogicException::class);
+        $dc = new Constraint();
+        $dc->check(0, ['type' => 'foo']);
+    }
+
+    public function testConstraintValidation() {
+        $valid_constraint = [
+            'type'        => 'string',
+            'default'     => '',
+            'is_nullable' => false,
+            'read_only'   => false,
+            'constraint'  => [
+                'type' => 'integer',
+            ],
+            'min'            => 0,
+            'max'            => 10,
+            'allowed_values' => ['foo', 'bar'],
+            'pattern'        => '',
+        ];
+        $dc = new Constraint();
+        $this->assertTrue(
+            $dc->validateConstraint($valid_constraint)
+        );
+    }
+
+    public function testConstraintValidationExceptionTypes() {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionCode(2);
+        $dc = new Constraint();
+        $this->assertTrue(
+            $dc->validateConstraint(['type' => 1])
+        );
+    }
+
+    public function testConstraintValidationExceptionKeys() {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionCode(1);
+        $dc = new Constraint();
+        $this->assertTrue(
+            $dc->validateConstraint(['foo' => 1])
+        );
+    }
+
+    public function testConstraintValidationExtraValues() {
+        $dc = new Constraint(['foo' => 0]);
+        $this->assertTrue(
+            $dc->validateConstraint(['foo' => 1])
+        );
+    }
+
+    public function testConstraintValidationExceptionExtraKeys() {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionCode(2);
+        $dc = new Constraint(['foo' => 0]);
+        $this->assertTrue(
+            $dc->validateConstraint(['foo' => ''])
+        );
+    }
 
     /**
      * @dataProvider successData
      */
     public function testSuccess($value, $constraint, $expect) {
-        $_SERVER["DN_DEBUG"] = true;
-        $dc = new Constraint();
+        $_SERVER['DN_DEBUG'] = true;
+        $dc                  = new Constraint();
         if (is_object($expect)) {
             $this->assertEquals(
                 $expect,
@@ -26,266 +123,172 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function testExceptionMethods() {
-        $dc = new ConstraintException(
-            "some value",
-            "expected",
-            "example"
-        );
-        $this->assertEquals(
-            "expected",
-            $dc->getExpected()
-        );
-        $this->assertEquals(
-            "example",
-            $dc->getExample()
-        );
-    }
-
-    /**
-     * @dataProvider exceptionData
-     * @expectedException \DealNews\Constraints\ConstraintException
-     */
-    public function testExceptions($value, $constraint) {
-        $dc = Constraint::init();
-        $dc->check($value, $constraint);
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
-    public function testInvalidType() {
-        $dc = new Constraint();
-        $dc->check(0, ["type" => "foo"]);
-    }
-
-    public function testConstraintValidation() {
-        $valid_constraint = [
-            "type" => "string",
-            "default" => "",
-            "is_nullable" => false,
-            "read_only" => false,
-            "constraint" => [
-                "type" => "integer"
-            ],
-            "min" => 0,
-            "max" => 10,
-            "allowed_values" => ["foo", "bar"],
-            "pattern" => ""
-        ];
-        $dc = new Constraint();
-        $this->assertTrue(
-            $dc->validateConstraint($valid_constraint)
-        );
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 2
-     */
-    public function testConstraintValidationExceptionTypes() {
-        $dc = new Constraint();
-        $this->assertTrue(
-            $dc->validateConstraint(["type" => 1])
-        );
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 1
-     */
-    public function testConstraintValidationExceptionKeys() {
-        $dc = new Constraint();
-        $this->assertTrue(
-            $dc->validateConstraint(["foo" => 1])
-        );
-    }
-
-    public function testConstraintValidationExtraValues() {
-        $dc = new Constraint(["foo" => 0]);
-        $this->assertTrue(
-            $dc->validateConstraint(["foo" => 1])
-        );
-    }
-
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionCode 2
-     */
-    public function testConstraintValidationExceptionExtraKeys() {
-        $dc = new Constraint(["foo" => 0]);
-        $this->assertTrue(
-            $dc->validateConstraint(["foo" => ""])
-        );
-    }
-
     public function successData() {
-
         $dt = new \DateTime();
 
         return [
             [
-                "foo",
-                ["type" => "string"],
-                "foo"
+                'foo',
+                ['type' => 'string'],
+                'foo',
             ],
             [
-                "foo",
+                'foo',
                 [
-                    "type" => "string",
-                    "pattern" => '/^f/'
+                    'type'    => 'string',
+                    'pattern' => '/^f/',
                 ],
-                "foo"
+                'foo',
             ],
             [
                 1,
-                ["type" => "string"],
-                "1"
+                ['type' => 'string'],
+                '1',
             ],
             [
-                "Yes",
+                'Yes',
                 [
-                    "type" => "string",
-                    "allowed_values" => [
-                        "Yes",
-                        "No"
-                    ]
+                    'type'           => 'string',
+                    'allowed_values' => [
+                        'Yes',
+                        'No',
+                    ],
                 ],
-                "Yes"
+                'Yes',
             ],
             [
-                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                 [
-                    "type" => "string",
-                    "max" => 50,
-                    "min" => 10
+                    'type' => 'string',
+                    'max'  => 50,
+                    'min'  => 10,
                 ],
-                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
             ],
             [
                 1,
-                ["type" => "integer"],
-                1
-            ],
-            [
+                ['type' => 'integer'],
                 1,
-                [
-                    "type" => "integer",
-                    "min" => 0,
-                    "max" => 10
-                ],
-                1
-            ],
-            [
-                "1",
-                ["type" => "integer"],
-                1
-            ],
-            [
-                1,
-                ["type" => "double"],
-                1.0
-            ],
-            [
-                "1",
-                ["type" => "double"],
-                1.0
             ],
             [
                 1,
                 [
-                    "type" => "double",
-                    "min" => 0,
-                    "max" => 10
+                    'type' => 'integer',
+                    'min'  => 0,
+                    'max'  => 10,
                 ],
-                1.0
+                1,
             ],
             [
-                "1",
-                ["type" => "boolean"],
-                true
+                '1',
+                ['type' => 'integer'],
+                1,
+            ],
+            [
+                1,
+                ['type' => 'double'],
+                1.0,
+            ],
+            [
+                '1',
+                ['type' => 'double'],
+                1.0,
+            ],
+            [
+                1,
+                [
+                    'type' => 'double',
+                    'min'  => 0,
+                    'max'  => 10,
+                ],
+                1.0,
+            ],
+            [
+                '1',
+                ['type' => 'boolean'],
+                true,
             ],
             [
                 true,
-                ["type" => "boolean"],
-                true
+                ['type' => 'boolean'],
+                true,
             ],
             [
-                "true",
-                ["type" => "boolean"],
-                true
+                'true',
+                ['type' => 'boolean'],
+                true,
             ],
 
             // Testing integration with the abstract types
             // Those types are tested in files of their own
             [
-                "http://www.example.com/",
-                ["type" => "url"],
-                "http://www.example.com/"
+                'http://www.example.com/',
+                ['type' => 'url'],
+                'http://www.example.com/',
             ],
 
             // testing class checking
             [
                 $dt,
-                ["type" => "\DateTime"],
-                $dt
+                ['type' => "\DateTime"],
+                $dt,
             ],
             [
                 null,
-                ["type" => "\DateTime"],
-                null
+                ['type' => "\DateTime"],
+                null,
             ],
             // testing is_nullable and default
             [
                 null,
                 [
-                    "type" => "string",
-                    "pattern" => '/^f/',
-                    "is_nullable" => true
+                    'type'        => 'string',
+                    'pattern'     => '/^f/',
+                    'is_nullable' => true,
                 ],
-                null
+                null,
             ],
             [
                 null,
                 [
-                    "type" => "string",
-                    "pattern" => '/^f/',
-                    "is_nullable" => false,
-                    "default" => "foo"
+                    'type'        => 'string',
+                    'pattern'     => '/^f/',
+                    'is_nullable' => false,
+                    'default'     => 'foo',
                 ],
-                "foo"
+                'foo',
             ],
             [
-                "123",
+                '123',
                 [
-                    "type" => "integer",
-                    "read_only" => true
+                    'type'      => 'integer',
+                    'read_only' => true,
                 ],
-                "123"
+                '123',
+            ],
+            [
+                [1,2,3],
+                [
+                    'type'       => 'array',
+                    'constraint' => [
+                        'type' => 'integer',
+                    ],
+                ],
+                [1,2,3]
             ],
             [
                 new \ArrayObject(),
                 [
-                    "type" => "array"
+                    'type' => 'array',
                 ],
-                []
+                [],
             ],
             [
                 [],
                 [
-                    "type" => "\ArrayObject"
+                    'type' => "\ArrayObject",
                 ],
-                new \ArrayObject
-            ],
-            [
-                [1,2],
-                [
-                    "type" => "array",
-                    "constraint" => [
-                        "type" => "integer"
-                    ]
-                ],
-                [1,2]
+                new \ArrayObject,
             ],
         ];
     }
@@ -295,123 +298,124 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
             [
                 1000,
                 [
-                    "type" => "integer",
-                    "max"  => 100
-                ]
+                    'type' => 'integer',
+                    'max'  => 100,
+                ],
             ],
             [
-                "foo",
-                ["type" => "integer"]
-            ],
-            [
-                1,
-                [
-                    "type" => "integer",
-                    "min" => 5,
-                    "max" => 10
-                ]
-            ],
-            [
-                100,
-                [
-                    "type" => "integer",
-                    "min" => 5,
-                    "max" => 10
-                ]
-            ],
-            [
-                "1,000",
-                ["type" => "double"]
+                'foo',
+                ['type' => 'integer'],
             ],
             [
                 1,
                 [
-                    "type" => "double",
-                    "min" => 5,
-                    "max" => 10
-                ]
+                    'type' => 'integer',
+                    'min'  => 5,
+                    'max'  => 10,
+                ],
             ],
             [
                 100,
                 [
-                    "type" => "double",
-                    "min" => 5,
-                    "max" => 10
-                ]
+                    'type' => 'integer',
+                    'min'  => 5,
+                    'max'  => 10,
+                ],
+            ],
+            [
+                '1,000',
+                ['type' => 'double'],
+            ],
+            [
+                1,
+                [
+                    'type' => 'double',
+                    'min'  => 5,
+                    'max'  => 10,
+                ],
+            ],
+            [
+                100,
+                [
+                    'type' => 'double',
+                    'min'  => 5,
+                    'max'  => 10,
+                ],
             ],
             [
                 [],
-                ["type" => "string"]
+                ['type' => 'string'],
             ],
             [
-                "Bob",
+                'Bob',
                 [
-                    "type" => "string",
-                    "allowed_values" => [
-                        "Yes",
-                        "No"
-                    ]
-                ]
+                    'type'           => 'string',
+                    'allowed_values' => [
+                        'Yes',
+                        'No',
+                    ],
+                ],
             ],
             [
-                "bar",
+                'bar',
                 [
-                    "type" => "string",
-                    "pattern" => '/^f/'
-                ]
+                    'type'    => 'string',
+                    'pattern' => '/^f/',
+                ],
             ],
             [
-                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                 [
-                    "type" => "string",
-                    "max" => 10
-                ]
+                    'type' => 'string',
+                    'max'  => 10,
+                ],
             ],
             [
-                "",
+                '',
                 [
-                    "type" => "string",
-                    "min" => 10
-                ]
+                    'type' => 'string',
+                    'min'  => 10,
+                ],
             ],
             [
                 1,
-                ["type" => "array"]
+                ['type' => 'array'],
             ],
             [
-                "Maybe",
-                ["type" => "boolean"]
+                'Maybe',
+                ['type' => 'boolean'],
             ],
             // Testing integration with the abstract types
             // Those types are tested in files of their own
             [
-                "asdf",
-                ["type" => "url"]
+                'asdf',
+                ['type' => 'url'],
             ],
             // testing class checking
             [
-                "foo",
-                ["type" => "\DateTime"]
+                'foo',
+                ['type' => "\DateTime"],
             ],
             // testing is_nullable and missing default
             [
                 null,
                 [
-                    "type" => "string",
-                    "pattern" => '/^f/',
-                    "is_nullable" => false,
+                    'type'        => 'string',
+                    'pattern'     => '/^f/',
+                    'is_nullable' => false,
                 ],
-                ""
+                '',
             ],
-            [ // testing that sub constraints are processed for array types
-                ['foo'],
+            [
+                [[1],2,3],
                 [
-                    "type" => "array",
-                    "constraint" => [
-                        'type' => 'integer'
-                    ]
+                    'type'       => 'array',
+                    'constraint' => [
+                        'type' => 'integer',
+                    ],
                 ]
             ],
+
         ];
     }
 }

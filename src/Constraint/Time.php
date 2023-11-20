@@ -16,11 +16,11 @@ use DealNews\Constraints\Interfaces\ConstraintInterface;
  */
 class Time extends AbstractConstraint implements ConstraintInterface {
 
-    const DESCRIPTION = "A value describing an absolute or relative time";
+    const DESCRIPTION = 'A value describing an absolute or relative time';
 
     const EXAMPLE = "'01:21:58-05:00', '01:22:01 -0500', '1:23am', 'now', '-2 hours'";
 
-    const PRIMITIVE = "string";
+    const PRIMITIVE = 'string';
 
     /**
      * Filter function for this abstract type
@@ -38,8 +38,9 @@ class Time extends AbstractConstraint implements ConstraintInterface {
         if ($ts === false || $ts <= 0) {
             $value = null;
         } else {
-            $value = date("H:i:s", $ts);
+            $value = date('H:i:s', $ts);
         }
+
         return $value;
     }
 }

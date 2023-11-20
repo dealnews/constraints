@@ -19,14 +19,14 @@ class ConstraintException extends \UnexpectedValueException {
      *
      * @var string
      */
-    protected $expected = "";
+    protected $expected = '';
 
     /**
      * A human friendly example of valid values
      *
      * @var string
      */
-    protected $example = "";
+    protected $example = '';
 
     /**
      * Constructor
@@ -37,7 +37,7 @@ class ConstraintException extends \UnexpectedValueException {
      * @param integer         $code     A unique code for this thrown exception
      * @param \Throwable|null $previous A previously thrown exception which was caught
      */
-    public function __construct ($value, string $expected, string $example, int $code = 0, \Throwable $previous = null) {
+    public function __construct($value, string $expected, string $example, int $code = 0, \Throwable $previous = null) {
         if (!empty($expected)) {
             $this->expected = $expected;
         }
@@ -46,16 +46,16 @@ class ConstraintException extends \UnexpectedValueException {
             $this->example = $example;
         }
 
-        $message = "Invalid value";
+        $message = 'Invalid value';
 
         if (is_scalar($value)) {
-            $message.= " ".$value;
+            $message .= ' ' . $value;
         }
 
-        $message.= ". Expected: $this->expected.";
+        $message .= ". Expected: $this->expected.";
 
         if (!empty($this->example)) {
-            $message.= " Example: $this->example";
+            $message .= " Example: $this->example";
         }
 
         parent::__construct($message, $code, $previous);
@@ -66,7 +66,7 @@ class ConstraintException extends \UnexpectedValueException {
      *
      * @return string
      */
-    public function getExpected (): string {
+    public function getExpected(): string {
         return $this->expected;
     }
 
@@ -75,7 +75,7 @@ class ConstraintException extends \UnexpectedValueException {
      *
      * @return string
      */
-    public function getExample (): string {
+    public function getExample(): string {
         return $this->example;
     }
 }

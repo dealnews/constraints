@@ -8,38 +8,41 @@ namespace DealNews\Constraints;
  * @copyright   1997-Present DealNews.com, Inc
  * @package     Constraints
  */
-
 class Constraint {
 
     /**
      * Primitive types supported by this class
      *
      * @var array
+     *
+     * @phan-suppress PhanReadOnlyProtectedProperty
      */
     protected $primitive_types = [
-        "array",
-        "boolean",
-        "double",
-        "integer",
-        "string",
+        'array',
+        'boolean',
+        'double',
+        'integer',
+        'string',
     ];
 
     /**
      * Abstract types and the classes that validate them
      *
      * @var array
+     *
+     * @phan-suppress PhanReadOnlyProtectedProperty
      */
     protected $abstract_types = [
-        "bytes"     => "\DealNews\Constraints\Constraint\Bytes",
-        "currency"  => "\DealNews\Constraints\Constraint\Currency",
-        "date"      => "\DealNews\Constraints\Constraint\Date",
-        "datetime"  => "\DealNews\Constraints\Constraint\DateTime",
-        "length"    => "\DealNews\Constraints\Constraint\Length",
-        "range"     => "\DealNews\Constraints\Constraint\Range",
-        "time"      => "\DealNews\Constraints\Constraint\Time",
-        "url"       => "\DealNews\Constraints\Constraint\URL",
-        "url_path"  => "\DealNews\Constraints\Constraint\URLPath",
-        "year"      => "\DealNews\Constraints\Constraint\Year",
+        'bytes'     => \DealNews\Constraints\Constraint\Bytes::class,
+        'currency'  => \DealNews\Constraints\Constraint\Currency::class,
+        'date'      => \DealNews\Constraints\Constraint\Date::class,
+        'datetime'  => \DealNews\Constraints\Constraint\DateTime::class,
+        'length'    => \DealNews\Constraints\Constraint\Length::class,
+        'range'     => \DealNews\Constraints\Constraint\Range::class,
+        'time'      => \DealNews\Constraints\Constraint\Time::class,
+        'url'       => \DealNews\Constraints\Constraint\URL::class,
+        'url_path'  => \DealNews\Constraints\Constraint\URLPath::class,
+        'year'      => \DealNews\Constraints\Constraint\Year::class,
     ];
 
     /**
@@ -47,17 +50,19 @@ class Constraint {
      * constraints againt when debug is enabled.
      *
      * @var array
+     *
+     * @phan-suppress PhanReadOnlyProtectedProperty
      */
     protected $valid_constraint = [
-        "type" => "",
-        "default" => null,
-        "is_nullable" => false,
-        "read_only" => false,
-        "constraint" => [],
-        "min" => 0,
-        "max" => 0,
-        "allowed_values" => [],
-        "pattern" => ""
+        'type'           => '',
+        'default'        => null,
+        'is_nullable'    => false,
+        'read_only'      => false,
+        'constraint'     => [],
+        'min'            => 0,
+        'max'            => 0,
+        'allowed_values' => [],
+        'pattern'        => '',
     ];
 
     /**
@@ -77,7 +82,7 @@ class Constraint {
      */
     public function __construct(array $extra_options = []) {
 
-        if (!empty($_SERVER["DN_DEBUG"])) {
+        if (!empty($_SERVER['DN_DEBUG'])) {
             $this->debug = true;
         }
 
@@ -112,34 +117,34 @@ class Constraint {
         }
 
 
-        if (in_array($constraint["type"], $this->primitive_types)) {
+        if (in_array($constraint['type'], $this->primitive_types)) {
 
-            $new_value = $this->filterPrimitive($value, $constraint["type"], $constraint);
+            $new_value = $this->filterPrimitive($value, $constraint['type'], $constraint);
 
-        } elseif (isset($this->abstract_types[$constraint["type"]])) {
+        } elseif (isset($this->abstract_types[$constraint['type']])) {
 
-            $new_value = $this->filterAbstract($value, $this->abstract_types[$constraint["type"]], $constraint);
+            $new_value = $this->filterAbstract($value, $this->abstract_types[$constraint['type']], $constraint);
 
-        } elseif (is_object($value) || class_exists($constraint["type"])) {
+        } elseif (is_object($value) || class_exists($constraint['type'])) {
 
-            $new_value = $this->filterClass($value, $constraint["type"]);
+            $new_value = $this->filterClass($value, $constraint['type']);
 
         } else {
 
             throw new \LogicException("Invalid constraint $constraint[type]");
         }
 
-        if (!empty($constraint["allowed_values"])) {
-            if (!in_array($new_value, $constraint["allowed_values"])) {
+        if (!empty($constraint['allowed_values'])) {
+            if (!in_array($new_value, $constraint['allowed_values'])) {
                 throw new ConstraintException(
                     $value,
-                    "one of ".implode(", ", $constraint["allowed_values"]),
-                    ""
+                    'one of ' . implode(', ', $constraint['allowed_values']),
+                    ''
                 );
             }
         }
 
-        if (!empty($constraint["read_only"])) {
+        if (!empty($constraint['read_only'])) {
             // we can validate, but not modify read only values
             $new_value = $value;
         }
@@ -171,7 +176,7 @@ class Constraint {
 
         switch ($type) {
 
-            case "array":
+            case 'array':
                 if (!is_array($value)) {
                     $new_value = null;
                     if (is_object($value) && $value instanceof \ArrayObject) {
@@ -184,64 +189,64 @@ class Constraint {
                             $this->check($nv, $constraint['constraint']);
                         }
                     } catch (ConstraintException $e) {
-                        $new_value = null;
-                        $expectation = "array contents: " . $e->getExpected();
+                        $new_value   = null;
+                        $expectation = 'array contents: ' . $e->getExpected();
                     }
                 }
                 break;
 
-            case "boolean":
+            case 'boolean':
                 if (!is_bool($value)) {
                     $new_value = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
                 break;
 
-            case "double":
+            case 'double':
                 if (!is_float($value)) {
                     $new_value = filter_var($value, FILTER_VALIDATE_FLOAT);
                 }
                 if ($new_value === false) {
                     $new_value = null;
-                } elseif (isset($constraint["max"]) && $new_value > $constraint["max"]) {
-                    $new_value = null;
+                } elseif (isset($constraint['max']) && $new_value > $constraint['max']) {
+                    $new_value   = null;
                     $expectation = "$constraint[max] or less";
 
-                } elseif (isset($constraint["min"]) && $new_value < $constraint["min"]) {
-                    $new_value = null;
+                } elseif (isset($constraint['min']) && $new_value < $constraint['min']) {
+                    $new_value   = null;
                     $expectation = "$constraint[max] or more";
                 }
                 break;
 
-            case "integer":
+            case 'integer':
                 if (!is_int($value)) {
                     $new_value = filter_var($value, FILTER_VALIDATE_INT);
                 }
                 if ($new_value === false) {
                     $new_value = null;
-                } elseif (isset($constraint["max"]) && $new_value > $constraint["max"]) {
-                    $new_value = null;
+                } elseif (isset($constraint['max']) && $new_value > $constraint['max']) {
+                    $new_value   = null;
                     $expectation = "$constraint[max] or less";
 
-                } elseif (isset($constraint["min"]) && $new_value < $constraint["min"]) {
-                    $new_value = null;
+                } elseif (isset($constraint['min']) && $new_value < $constraint['min']) {
+                    $new_value   = null;
                     $expectation = "$constraint[max] or more";
                 }
                 break;
 
-            case "string":
+            case 'string':
                 if (!is_scalar($value)) {
                     $new_value = null;
                 } else {
                     $new_value = (string)$value;
-                    if (isset($constraint["max"]) && strlen($new_value) > $constraint["max"]) {
-                        $new_value = null;
+                    if (isset($constraint['max']) && mb_strlen($new_value) > $constraint['max']) {
+                        $new_value   = null;
                         $expectation = "maximum length of $constraint[max]";
-                    } elseif (isset($constraint["min"]) && strlen($new_value) < $constraint["min"]) {
-                        $new_value = null;
+                    } elseif (isset($constraint['min']) && mb_strlen($new_value) < $constraint['min']) {
+                        $new_value   = null;
                         $expectation = "minimum length of $constraint[min]";
-                    } elseif (isset($constraint["pattern"]) && !preg_match($constraint["pattern"], $new_value)) {
-                        $new_value = null;
-                        $expectation = "matches pattern";
+                    } elseif (isset($constraint['pattern']) && !preg_match($constraint['pattern'], $new_value)) {
+                        $new_value   = null;
+                        $expectation = 'matches pattern';
                     }
                 }
                 break;
@@ -252,7 +257,7 @@ class Constraint {
             throw new ConstraintException(
                 $value,
                 $expectation,
-                ""
+                ''
             );
         }
 
@@ -294,7 +299,7 @@ class Constraint {
      */
     public function filterClass($value, string $class) {
         if (!($value instanceof $class)) {
-            if (is_array($value) && is_a($class, "\ArrayObject", true)) {
+            if (is_array($value) && is_a($class, '\\ArrayObject', true)) {
                 $obj = new $class();
                 $obj->exchangeArray($value);
                 $value = $obj;
@@ -302,10 +307,11 @@ class Constraint {
                 throw new ConstraintException(
                     $value,
                     "instance of $class",
-                    ""
+                    ''
                 );
             }
         }
+
         return $value;
     }
 
@@ -323,8 +329,8 @@ class Constraint {
          * and throw a warning on dev as that is bad form.
          */
         if (array_key_exists('default', $constraint)) {
-            if ($constraint["default"] !== null && $value === null) {
-                $value = $constraint["default"];
+            if ($constraint['default'] !== null && $value === null) {
+                $value = $constraint['default'];
             }
         }
 
@@ -348,11 +354,11 @@ class Constraint {
         if (
             $value === null &&
             (
-                !isset($constraint["is_nullable"]) ||
-                $constraint["is_nullable"] === true ||
+                !isset($constraint['is_nullable'])  ||
+                $constraint['is_nullable'] === true ||
                 (
-                    isset($constraint["default"]) &&
-                    $constraint["default"] === null
+                    isset($constraint['default']) &&
+                    $constraint['default'] === null
                 )
             )
         ) {
@@ -374,9 +380,10 @@ class Constraint {
                 throw new \LogicException("Invalid constraint option $option", 1);
             }
             if ($this->valid_constraint[$option] !== null && gettype($value) != gettype($this->valid_constraint[$option])) {
-                throw new \LogicException("Constraint option $option must be of type ".gettype($this->valid_constraint[$option]), 2);
+                throw new \LogicException("Constraint option $option must be of type " . gettype($this->valid_constraint[$option]), 2);
             }
         }
+
         return true;
     }
 
@@ -392,7 +399,7 @@ class Constraint {
 
         $key = md5(serialize($extra_options));
         if (!array_key_exists($key, $instances)) {
-            $class = get_called_class();
+            $class           = get_called_class();
             $instances[$key] = new $class($extra_options);
         }
 

@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\Year;
 
 class YearTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -28,27 +27,26 @@ class YearTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function constraintData() {
-
         return [
             [
-                "midnight",
-                ["type" => "year"],
-                null
+                'midnight',
+                ['type' => 'year'],
+                null,
             ],
             [
-                "1998",
-                ["type" => "year"],
-                1998
+                '1998',
+                ['type' => 'year'],
+                1998,
             ],
             [
                 1055,
-                ["type" => "year"],
-                null
+                ['type' => 'year'],
+                null,
             ],
             [
                 2200,
-                ["type" => "year"],
-                null
+                ['type' => 'year'],
+                null,
             ],
         ];
     }

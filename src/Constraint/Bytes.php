@@ -16,11 +16,11 @@ use DealNews\Constraints\Interfaces\ConstraintInterface;
  */
 class Bytes extends AbstractConstraint implements ConstraintInterface {
 
-    const DESCRIPTION = "A value describing an amount of bytes";
+    const DESCRIPTION = 'A value describing an amount of bytes';
 
-    const EXAMPLE = "10kb, 250MB, 500GB, 2TB";
+    const EXAMPLE = '10kb, 250MB, 500GB, 2TB';
 
-    const PRIMITIVE = "string";
+    const PRIMITIVE = 'string';
 
     /**
      * Filter function for this abstract type
@@ -34,9 +34,10 @@ class Bytes extends AbstractConstraint implements ConstraintInterface {
      * @suppress PhanUnusedPublicMethodParameter
      */
     public static function filter($value, array $constraint, Constraint $dc) {
-        if (!preg_match('/^\d[\d,\.]*[kmgtp]b$/i', $value)) {
+        if (!preg_match('/^\\d[\\d,\\.]*[kmgtp]b$/i', $value)) {
             $value = null;
         }
+
         return $value;
     }
 }

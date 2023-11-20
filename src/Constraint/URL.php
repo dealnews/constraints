@@ -16,11 +16,11 @@ use DealNews\Constraints\Interfaces\ConstraintInterface;
  */
 class URL extends AbstractConstraint implements ConstraintInterface {
 
-    const DESCRIPTION = "A valid URL";
+    const DESCRIPTION = 'A valid URL';
 
-    const EXAMPLE = "https://www.dealnews.com/";
+    const EXAMPLE = 'https://www.dealnews.com/';
 
-    const PRIMITIVE = "string";
+    const PRIMITIVE = 'string';
 
     /**
      * Filter function for this abstract type
@@ -38,6 +38,7 @@ class URL extends AbstractConstraint implements ConstraintInterface {
         if (!filter_var($value, FILTER_VALIDATE_URL)) {
             $value = null;
         }
+
         return $value;
     }
 }

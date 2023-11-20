@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\Range;
 
 class RangeTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -30,87 +29,87 @@ class RangeTest extends \PHPUnit\Framework\TestCase {
 
     public function constraintData() {
         $tests = [];
-        foreach (["=","<",">",">=","<="] as $operator) {
+        foreach (['=', '<', '>', '>=', '<='] as $operator) {
             $tests[] = [
                 [$operator, 1],
                 [
-                    "type"       => "range",
-                    "constraint" => [
-                        "type" => "integer"
-                    ]
+                    'type'       => 'range',
+                    'constraint' => [
+                        'type' => 'integer',
+                    ],
                 ],
-                [$operator, 1]
+                [$operator, 1],
             ];
         }
 
         $tests[] = [
-            ["between", 1, 10],
+            ['between', 1, 10],
             [
-                "type"       => "range",
-                "constraint" => [
-                    "type" => "integer"
-                ]
+                'type'       => 'range',
+                'constraint' => [
+                    'type' => 'integer',
+                ],
             ],
-            ["between", 1, 10],
+            ['between', 1, 10],
         ];
 
         $tests[] = [
-            [">", "midnight"],
+            ['>', 'midnight'],
             [
-                "type"       => "range",
-                "constraint" => [
-                    "type" => "datetime"
-                ]
+                'type'       => 'range',
+                'constraint' => [
+                    'type' => 'datetime',
+                ],
             ],
-            [">", date("Y-m-d")." 00:00:00"],
+            ['>', date('Y-m-d') . ' 00:00:00'],
         ];
 
         $tests[] = [
-            [">", null],
+            ['>', null],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         $tests[] = [
-            ["between", 1],
+            ['between', 1],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         $tests[] = [
-            ["between", 1, null],
+            ['between', 1, null],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         $tests[] = [
-            ["gte", 1],
+            ['gte', 1],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         $tests[] = [
-            ["=<", 1],
+            ['=<', 1],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         $tests[] = [
-            ["=>", 1],
+            ['=>', 1],
             [
-                "type"       => "range"
+                'type'       => 'range',
             ],
-            null
+            null,
         ];
 
         return $tests;

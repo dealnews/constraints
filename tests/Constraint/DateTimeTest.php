@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\DateTime;
 
 class DateTimeTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -28,27 +27,26 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function constraintData() {
-
         return [
             [
-                "midnight",
-                ["type" => "datetime"],
-                date("Y-m-d")." 00:00:00"
+                'midnight',
+                ['type' => 'datetime'],
+                date('Y-m-d') . ' 00:00:00',
             ],
             [
-                "0000-00-00 00:00:00",
-                ["type" => "datetime"],
-                null
+                '0000-00-00 00:00:00',
+                ['type' => 'datetime'],
+                null,
             ],
             [
-                "",
-                ["type" => "datetime"],
-                null
+                '',
+                ['type' => 'datetime'],
+                null,
             ],
             [
-                "2018-01-01",
-                ["type" => "datetime"],
-                "2018-01-01 00:00:00"
+                '2018-01-01',
+                ['type' => 'datetime'],
+                '2018-01-01 00:00:00',
             ],
         ];
     }

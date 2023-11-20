@@ -16,11 +16,11 @@ use DealNews\Constraints\Interfaces\ConstraintInterface;
  */
 class Year extends AbstractConstraint implements ConstraintInterface {
 
-    const DESCRIPTION = "A value describing a year between 1901 and 2155";
+    const DESCRIPTION = 'A value describing a year between 1901 and 2155';
 
-    const EXAMPLE = "1998, 2000, 2018";
+    const EXAMPLE = '1998, 2000, 2018';
 
-    const PRIMITIVE = "integer";
+    const PRIMITIVE = 'integer';
 
     /**
      * Filter function for this abstract type
@@ -37,6 +37,7 @@ class Year extends AbstractConstraint implements ConstraintInterface {
         if ($value < 1901 || $value > 2155) {
             $value = null;
         }
+
         return $value;
     }
 }

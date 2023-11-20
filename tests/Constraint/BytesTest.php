@@ -6,7 +6,6 @@ use \DealNews\Constraints\Constraint;
 use \DealNews\Constraints\Constraint\Bytes;
 
 class BytesTest extends \PHPUnit\Framework\TestCase {
-
     /**
      * @dataProvider constraintData
      */
@@ -28,22 +27,21 @@ class BytesTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function constraintData() {
-
         return [
             [
-                "1MB",
-                ["type" => "bytes"],
-                "1MB"
+                '1MB',
+                ['type' => 'bytes'],
+                '1MB',
             ],
             [
-                "1kb",
-                ["type" => "bytes"],
-                "1kb"
+                '1kb',
+                ['type' => 'bytes'],
+                '1kb',
             ],
             [
                 10,
-                ["type" => "bytes"],
-                null
+                ['type' => 'bytes'],
+                null,
             ],
         ];
     }
