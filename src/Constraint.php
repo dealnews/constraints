@@ -185,8 +185,8 @@ class Constraint {
                 }
                 if (is_array($new_value) && !empty($constraint['constraint'])) {
                     try {
-                        foreach ($new_value as $nv) {
-                            $this->check($nv, $constraint['constraint']);
+                        foreach ($new_value as $k => $nv) {
+                            $new_value[$k] = $this->check($nv, $constraint['constraint']);
                         }
                     } catch (ConstraintException $e) {
                         $new_value   = null;

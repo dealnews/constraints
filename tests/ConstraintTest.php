@@ -277,6 +277,22 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
                 [1,2,3]
             ],
             [
+                [
+                    'https://www.example.com',
+                    'https://www.example.com  ',
+                ],
+                [
+                    'type'       => 'array',
+                    'constraint' => [
+                        'type' => 'url',
+                    ],
+                ],
+                [
+                    'https://www.example.com',
+                    'https://www.example.com',
+                ],
+            ],
+            [
                 new \ArrayObject(),
                 [
                     'type' => 'array',
