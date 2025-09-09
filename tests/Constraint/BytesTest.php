@@ -26,7 +26,7 @@ class BytesTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
             [
                 '1MB',

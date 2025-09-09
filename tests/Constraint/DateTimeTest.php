@@ -26,7 +26,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
             [
                 'midnight',

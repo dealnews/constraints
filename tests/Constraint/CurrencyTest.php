@@ -26,7 +26,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
             [
                 '$1,000.00',

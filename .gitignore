@@ -16,3 +16,4 @@ phpunit.xml
 .idea
 *.sublime-workspace
 *.sublime-project
+.phpunit.cache

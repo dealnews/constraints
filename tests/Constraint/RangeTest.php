@@ -27,7 +27,7 @@ class RangeTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         $tests = [];
         foreach (['=', '<', '>', '>=', '<='] as $operator) {
             $tests[] = [

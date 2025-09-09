@@ -26,7 +26,7 @@ class LengthTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         // 15.1, 15.1\", 15.1in, 15.1-inch, 10cm, 10m, 10km
         return [
             [
