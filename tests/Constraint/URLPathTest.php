@@ -26,7 +26,7 @@ class URLPathTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
             [
                 'http://www.example.com/',

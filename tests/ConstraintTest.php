@@ -123,7 +123,7 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function successData() {
+    public static function successData() {
         $dt = new \DateTime();
 
         return [
@@ -309,7 +309,7 @@ class ConstraintTest extends \PHPUnit\Framework\TestCase {
         ];
     }
 
-    public function exceptionData() {
+    public static function exceptionData() {
         return [
             [
                 1000,

@@ -26,7 +26,7 @@ class DateTest extends \PHPUnit\Framework\TestCase {
         }
     }
 
-    public function constraintData() {
+    public static function constraintData() {
         return [
             [
                 'now',
